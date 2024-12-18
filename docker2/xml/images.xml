@@ -1,0 +1,1 @@
+<Context docBase="/var/lib/tomcat9/webapps/images" path="/images" reloadable="true" crossContext="true"/>
