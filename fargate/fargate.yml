@@ -1,0 +1,27 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+#  name: "${ekscluster_name}""
+#  region: "${AWS_REGION}""
+#  version: "${eks_version}"  
+  name: "eksworkshop"
+  region: "ap-northeast-2"
+  version: "1.21"
+
+fargateProfiles:
+#  - name: fp-default
+#    selectors:
+#      - namespace: default
+#      - namespace: kube-system
+  - name: fargate-profile-01
+    selectors:
+      - namespace: fargate-01
+        labels:
+          env: fargate-01
+  - name: fargate-profile-02
+    selectors:
+      - namespace: fargate-02
+        labels:
+          env: fargate-02
