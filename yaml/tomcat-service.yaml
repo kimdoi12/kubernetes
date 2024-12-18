@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat
+spec:
+  type: LoadBalancer
+#  type: NodePort
+  selector:
+    app: tomcat
+  clusterIP: 172.17.20.100
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8080
+      nodePort: 30002

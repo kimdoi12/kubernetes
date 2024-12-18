@@ -1,0 +1,71 @@
+kubectl create namespace metallb-system
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+
+kubectl apply -f metallb-config.yaml
+
+kubectl apply -f super_mario.yml
+
+kubectl -n mario get all -o wide
+kubectl -n metallb-system get all -o wide
+
+# metallb yaml 생성
+cat > metallb-config.yaml
+
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default
+  namespace: metallb-system
+spec:
+  addresses:
+  - 10.0.0.240-10.0.0.250  # 호스트 네트워크에서 사용할 IP 범위
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - default
+  
+# super mario yaml 생성
+cat > super_mario.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mario
+  labels:
+    app: mario
+  namespace: mario
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mario
+  template:
+    metadata:
+      labels:
+        app: mario
+    spec:
+      containers:
+      - name: mario
+        image: pengbai/docker-supermario
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mario
+  namespace: mario
+spec:
+  selector:
+    app: mario
+  ports:
+  type: LoadBalancer
+  ports:
+   -  protocol: TCP
+      port: 80
+      targetPort: 8080
+  
